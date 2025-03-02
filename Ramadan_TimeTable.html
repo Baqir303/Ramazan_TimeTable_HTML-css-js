@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f6f2;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #d4a373;
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+        .slider {
+            display: flex;
+            overflow-x: auto;
+            width: 100%;
+            max-width: 600px;
+            padding: 10px 0;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+        }
+        .day-tab {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #d4a373;
+            color: white;
+            transition: background 0.3s;
+        }
+        .day-tab.active {
+            background: #ffad60;
+        }
+        .timetable {
+            background: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+        }
+        .day {
+            display: none;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+        }
+        .day.active {
+            display: block;
+        }
+        .course {
+            padding: 8px;
+            margin: 3px 0;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            display: flex;
+            justify-content: space-between;
+        }
+        .done::after {
+            content: '✅'; /* Unicode tick */
+            margin-left: 10px;
+        }
+        .cancelled::after {
+            content: '❌'; /* Unicode cross */
+            margin-left: 10px;
+            color: red;
+        }
+        .sre { background: #ffad60; }
+        .adv { background: #60a3ff; }
+        .st { background: #60ffb5; }
+        .agile { background: #ff6073; }
+        .options-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .options-container button {
+            padding: 5px 10px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+    </style>
+    <script>
+        let selectedCourse = null;
+        
+        function showDay(dayId, element) {
+            document.querySelectorAll('.day').forEach(day => day.classList.remove('active'));
+            document.querySelectorAll('.day-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(dayId).classList.add('active');
+            element.classList.add('active');
+        }
+        
+        function showOptions(courseElement) {
+            selectedCourse = courseElement;
+            document.querySelector('.options-container').style.display = 'block';
+        }
+        
+        function markDone() {
+            if (selectedCourse) selectedCourse.classList.add('done');
+            closeOptions();
+        }
+        
+        function markCancelled() {
+            if (selectedCourse) selectedCourse.classList.add('cancelled');
+            closeOptions();
+        }
+        
+        function removeMark() {
+            if (selectedCourse) {
+                selectedCourse.classList.remove('done');
+                selectedCourse.classList.remove('cancelled');
+            }
+            closeOptions();
+        }
+        
+        function closeOptions() {
+            document.querySelector('.options-container').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Ramadan Mubarak</h1>
+    <div class="slider">
+        <div class="day-tab active" onclick="showDay('tuesday', this)">Tuesday</div>
+        <div class="day-tab" onclick="showDay('wednesday', this)">Wednesday</div>
+        <div class="day-tab" onclick="showDay('thursday', this)">Thursday</div>
+        <div class="day-tab" onclick="showDay('friday', this)">Friday</div>
+    </div>
+    <div class="timetable">
+        <div class="day active" id="tuesday">
+            <div class="course sre" onclick="showOptions(this)">SRE E3 - 8:40-09:20 (A)</div>
+            <div class="course sre" onclick="showOptions(this)">SRE E3 - 12:40-01:20 (B)</div>
+            <div class="course adv" onclick="showOptions(this)">Adv E5 - 11:20-12:00</div>
+        </div>
+        <div class="day" id="wednesday">
+            <div class="course sre" onclick="showOptions(this)">SRE E1 - 08:00-08:40</div>
+            <div class="course st" onclick="showOptions(this)">ST E6 - 08:40-09:20</div>
+            <div class="course st" onclick="showOptions(this)">ST E2 - 10:40 - 11:20</div>
+            <div class="course adv" onclick="showOptions(this)">Adv E6 - 12:00-12:40</div>
+        </div>
+        <div class="day" id="thursday">
+            <div class="course sre" onclick="showOptions(this)">SRE E2 - 08:00-08:40 (A)</div>
+            <div class="course sre" onclick="showOptions(this)">SRE E4 - 10:55-11:30 (B)</div>
+            <div class="course adv" onclick="showOptions(this)">Adv E5 - 11:30-12:05 (B)</div>
+            <div class="course adv" onclick="showOptions(this)">Adv E6 - 12:05-12:40 (A)</div>
+        </div>
+        <div class="day" id="friday">
+            <div class="course agile" onclick="showOptions(this)">Agile - 09:30-10:10</div>
+        </div>
+    </div>
+    
+    <div class="options-container flex gap-4 p-4 bg-white shadow-lg rounded-2xl border border-gray-200">
+        <button onclick="markDone()" class="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-lg shadow-md transition-all">✅ Done</button> 
+        <button onclick="markCancelled()" class="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-lg shadow-md transition-all">❌ Cancelled</button> <br>
+        <button onclick="removeMark()" class="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg shadow-md transition-all">🔄 Remove</button>
+        <button onclick="closeOptions()" class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg shadow-md transition-all">🚪 Close</button>
+    </div>
+    
+</body>
+</html>
